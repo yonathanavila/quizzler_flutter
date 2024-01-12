@@ -1,9 +1,11 @@
+import 'question.dart';
+
 import 'package:flutter/material.dart';
 
-void main() => runApp(const MyApp());
+void main() => runApp(const Quizzler());
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class Quizzler extends StatelessWidget {
+  const Quizzler({super.key});
 
   // This widget is the root of your application.
   @override
@@ -35,32 +37,18 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
-  List<Icon> scoreKeeper = [
-    const Icon(
-      Icons.check,
-      color: Colors.green,
-    ),
-    const Icon(
-      Icons.close,
-      color: Colors.red,
-    ),
-    const Icon(
-      Icons.close,
-      color: Colors.red,
-    ),
-    const Icon(
-      Icons.close,
-      color: Colors.red,
-    ),
-    const Icon(
-      Icons.close,
-      color: Colors.red,
-    ),
-    const Icon(
-      Icons.close,
-      color: Colors.red,
-    )
+  List<Widget> scoreKeeper = [];
+
+  List<bool> answers = [false, true, true];
+
+  List<Question> questionBank = [
+    Question(q: 'You can lead a cow down stairs but not up stairs.', a: false),
+    Question(
+        q: 'Approximately one quarter of human bones are in the feet', a: true),
+    Question(q: 'A slug\'s blood is green.', a: true),
   ];
+
+  int currentOptionSelected = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -68,15 +56,15 @@ class _QuizPageState extends State<QuizPage> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        const Expanded(
+        Expanded(
           flex: 5,
           child: Padding(
-            padding: EdgeInsets.all(10.0),
+            padding: const EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                'This is where the question text will go.',
+                questionBank[currentOptionSelected].questionText,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 25.0,
                   color: Colors.white,
                 ),
@@ -105,7 +93,21 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
-                //The user picked true.
+                bool correctAnswers =
+                    questionBank[currentOptionSelected].questionAnswer;
+
+                if (correctAnswers == true) {
+                  print('Correct!');
+                } else {
+                  print('Incorrect!');
+                }
+
+                //The user picked false.
+                setState(
+                  () {
+                    currentOptionSelected++;
+                  },
+                );
               },
             ),
           ),
@@ -118,7 +120,7 @@ class _QuizPageState extends State<QuizPage> {
                 shape: MaterialStateProperty.all(
                   RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(0),
-                    side: BorderSide(color: Colors.red),
+                    side: const BorderSide(color: Colors.red),
                   ),
                 ),
                 backgroundColor: MaterialStateProperty.all(Colors.red),
@@ -131,7 +133,21 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
+                bool correctAnswers =
+                    questionBank[currentOptionSelected].questionAnswer;
+
+                if (correctAnswers == true) {
+                  print('Correct!');
+                } else {
+                  print('Incorrect!');
+                }
+
                 //The user picked false.
+                setState(
+                  () {
+                    currentOptionSelected++;
+                  },
+                );
               },
             ),
           ),
