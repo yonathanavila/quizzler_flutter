@@ -1,6 +1,8 @@
-import 'question.dart';
-
+import 'quiz_brain.dart';
 import 'package:flutter/material.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+
+QuizBrain quizBrain = QuizBrain();
 
 void main() => runApp(const Quizzler());
 
@@ -39,16 +41,48 @@ class QuizPage extends StatefulWidget {
 class _QuizPageState extends State<QuizPage> {
   List<Widget> scoreKeeper = [];
 
-  List<bool> answers = [false, true, true];
+  void checkAnswer(bool userPickedAnswer) {
+    bool correctAnswer = quizBrain.getCorrectAnswer();
+    setState(() {
+      if (userPickedAnswer == correctAnswer) {
+        if (!quizBrain.isFinished(scoreKeeper.length)) {
+          scoreKeeper.add(
+            const Icon(
+              Icons.check,
+              color: Colors.green,
+            ),
+          );
+        } else {
+          Alert(
+                  context: context,
+                  title: "Alert",
+                  desc: "Awesome!, You finished the quiz.")
+              .show();
+          quizBrain.resetQuizBrain();
+          scoreKeeper.clear();
+        }
+      } else {
+        if (!quizBrain.isFinished(scoreKeeper.length)) {
+          scoreKeeper.add(
+            const Icon(
+              Icons.close,
+              color: Colors.red,
+            ),
+          );
+        } else {
+          Alert(
+            context: context,
+            title: "Alert",
+            desc: "Awesome!, You finished the quiz.",
+          ).show();
+          quizBrain.resetQuizBrain();
+          scoreKeeper.clear();
+        }
+      }
 
-  List<Question> questionBank = [
-    Question(q: 'You can lead a cow down stairs but not up stairs.', a: false),
-    Question(
-        q: 'Approximately one quarter of human bones are in the feet', a: true),
-    Question(q: 'A slug\'s blood is green.', a: true),
-  ];
-
-  int currentOptionSelected = 0;
+      quizBrain.nextQuestion();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +96,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: const EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                questionBank[currentOptionSelected].questionText,
+                quizBrain.getQuestionText(),
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontSize: 25.0,
@@ -93,21 +127,7 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
-                bool correctAnswers =
-                    questionBank[currentOptionSelected].questionAnswer;
-
-                if (correctAnswers == true) {
-                  print('Correct!');
-                } else {
-                  print('Incorrect!');
-                }
-
-                //The user picked false.
-                setState(
-                  () {
-                    currentOptionSelected++;
-                  },
-                );
+                checkAnswer(true);
               },
             ),
           ),
@@ -133,21 +153,7 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
-                bool correctAnswers =
-                    questionBank[currentOptionSelected].questionAnswer;
-
-                if (correctAnswers == true) {
-                  print('Correct!');
-                } else {
-                  print('Incorrect!');
-                }
-
-                //The user picked false.
-                setState(
-                  () {
-                    currentOptionSelected++;
-                  },
-                );
+                checkAnswer(false);
               },
             ),
           ),
