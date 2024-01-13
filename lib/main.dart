@@ -54,10 +54,10 @@ class _QuizPageState extends State<QuizPage> {
           );
         } else {
           Alert(
-                  context: context,
-                  title: "Alert",
-                  desc: "Awesome!, You finished the quiz.")
-              .show();
+            context: context,
+            title: "Finished!",
+            desc: "Awesome!, You finished the quiz.",
+          ).show();
           quizBrain.resetQuizBrain();
           scoreKeeper.clear();
         }
@@ -72,7 +72,7 @@ class _QuizPageState extends State<QuizPage> {
         } else {
           Alert(
             context: context,
-            title: "Alert",
+            title: "Finished!",
             desc: "Awesome!, You finished the quiz.",
           ).show();
           quizBrain.resetQuizBrain();
